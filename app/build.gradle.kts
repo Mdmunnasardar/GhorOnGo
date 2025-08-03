@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.ads.mobile.sdk)
     implementation(libs.androidx.runtime)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.ui)
     //implementation(libs.material3)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -106,4 +108,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:<latest_version>")
     implementation("androidx.navigation:navigation-compose:<latest_version>")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.compose.material:material-icons-extended")
+
 }
