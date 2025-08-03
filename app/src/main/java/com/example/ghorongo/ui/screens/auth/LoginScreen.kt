@@ -3,21 +3,8 @@ package com.example.ghorongo.ui.screens.auth
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,8 +16,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.ghorongo.R
 import com.example.ghorongo.presentation.auth.AuthViewModel
+
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -59,7 +48,7 @@ fun LoginScreen(
                     .padding(bottom = 32.dp)
             )
 
-            // Login Title
+            // Title
             Text(
                 text = "Welcome Back",
                 style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
@@ -97,6 +86,7 @@ fun LoginScreen(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
                 label = { Text("Password", color = Color.White) },
+                visualTransformation = PasswordVisualTransformation(),
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color.White,
                     focusedTextColor = Color.White,
@@ -105,7 +95,6 @@ fun LoginScreen(
                     unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
                     focusedLabelColor = Color.White
                 ),
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -131,22 +120,17 @@ fun LoginScreen(
                 }
             }
 
-            // Forgot Password
+            // ✅ Navigate to Forgot Password screen
             TextButton(
                 onClick = {
-                    viewModel.sendPasswordReset()
-                    Toast.makeText(
-                        context, // Fixed context
-                        "Password reset email sent",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    navController.navigate("forgot_password")
                 },
                 modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text("Forgot Password?", color = Color.White)
             }
 
-            // Sign Up Suggestion
+            // Sign Up
             TextButton(
                 onClick = { navController.navigate("signup") },
                 modifier = Modifier.padding(top = 16.dp)
@@ -154,7 +138,7 @@ fun LoginScreen(
                 Text("Don't have an account? ", color = Color.White)
                 Text(
                     "Sign Up",
-                    color = Color(0xFFFFD700) // Gold color for emphasis
+                    color = Color(0xFFFFD700) // Gold color
                 )
             }
 
@@ -162,7 +146,7 @@ fun LoginScreen(
             viewModel.errorMessage?.let { error ->
                 Text(
                     text = error,
-                    color = Color(0xFFFF5252), // Light red
+                    color = Color(0xFFFF5252),
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
@@ -171,15 +155,16 @@ fun LoginScreen(
             viewModel.successMessage?.let { message ->
                 Text(
                     text = message,
-                    color = Color(0xFF69F0AE), // Light green
+                    color = Color(0xFF69F0AE),
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreenPreview()
+    LoginScreen(navController = rememberNavController())
 }
