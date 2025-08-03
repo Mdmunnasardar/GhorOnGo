@@ -1,0 +1,185 @@
+package com.example.ghorongo.ui.screens.auth
+
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.ghorongo.R
+import com.example.ghorongo.presentation.auth.AuthViewModel
+@Composable
+fun LoginScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = viewModel()
+) {
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1976D2)) // Solid blue background
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // App Logo
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(150.dp)
+                    .padding(bottom = 32.dp)
+            )
+
+            // Login Title
+            Text(
+                text = "Welcome Back",
+                style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Text(
+                text = "Login to continue",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.8f),
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+
+            // Email Field
+            OutlinedTextField(
+                value = viewModel.email,
+                onValueChange = { viewModel.email = it },
+                label = { Text("Email", color = Color.White) },
+                colors = TextFieldDefaults.colors(
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
+                    focusedLabelColor = Color.White
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                singleLine = true
+            )
+
+            // Password Field
+            OutlinedTextField(
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
+                label = { Text("Password", color = Color.White) },
+                colors = TextFieldDefaults.colors(
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
+                    focusedLabelColor = Color.White
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                singleLine = true
+            )
+
+            // Login Button
+            Button(
+                onClick = { viewModel.login(navController) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                enabled = !viewModel.isLoading
+            ) {
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(20.dp)
+                    )
+                } else {
+                    Text("Login")
+                }
+            }
+
+            // Forgot Password
+            TextButton(
+                onClick = {
+                    viewModel.sendPasswordReset()
+                    Toast.makeText(
+                        context, // Fixed context
+                        "Password reset email sent",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Forgot Password?", color = Color.White)
+            }
+
+            // Sign Up Suggestion
+            TextButton(
+                onClick = { navController.navigate("signup") },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Don't have an account? ", color = Color.White)
+                Text(
+                    "Sign Up",
+                    color = Color(0xFFFFD700) // Gold color for emphasis
+                )
+            }
+
+            // Error Message
+            viewModel.errorMessage?.let { error ->
+                Text(
+                    text = error,
+                    color = Color(0xFFFF5252), // Light red
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+
+            // Success Message
+            viewModel.successMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = Color(0xFF69F0AE), // Light green
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+        }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreenPreview()
+}
