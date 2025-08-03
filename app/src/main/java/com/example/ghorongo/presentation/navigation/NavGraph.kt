@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.ghorongo.presentation.auth.HomeScreen
-import com.example.ghorongo.presentation.auth.LoginScreen
-import com.example.ghorongo.presentation.auth.SignUpScreen
+import com.example.ghorongo.ui.screens.auth.CheckEmailScreen
+import com.example.ghorongo.ui.screens.auth.ForgotPasswordScreen
 
+import com.example.ghorongo.ui.screens.auth.HomeScreen
+import com.example.ghorongo.ui.screens.auth.LoginScreen
+import com.example.ghorongo.ui.screens.auth.SignUpScreen
 
 @Composable
 fun NavGraph(
@@ -26,6 +28,12 @@ fun NavGraph(
         }
         composable("home") {
             HomeScreen(navController = navController)
+        }
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController = navController)
+        }
+        composable("check_email") {
+            CheckEmailScreen(navController)
         }
     }
 }

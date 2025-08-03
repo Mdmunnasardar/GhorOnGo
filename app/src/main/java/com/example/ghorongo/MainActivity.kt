@@ -7,6 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.ghorongo.presentation.navigation.NavGraph
@@ -14,31 +19,47 @@ import com.example.ghorongo.ui.theme.GhorOnGoTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 class MainActivity : ComponentActivity() {
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize Firebase Auth
-        Firebase.auth.setLanguageCode("en") // Set language for auth emails
+        auth = Firebase.auth.apply {
+            setLanguageCode("en") // Set language for auth emails
+        }
 
         enableEdgeToEdge()
         setContent {
             GhorOnGoTheme {
-                // Edge-to-edge content
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val auth = Firebase.auth
+                    var startDestination by remember { mutableStateOf("login") }
 
-                    // Check if user is already logged in and verified
-                    val currentUser = auth.currentUser
-                    val startDestination = if (currentUser != null && currentUser.isEmailVerified) {
-                        "home"
-                    } else {
-                        "login"
+                    // Use LaunchedEffect to handle auth state changes reactively
+                    LaunchedEffect(Unit) {
+                        auth.addAuthStateListener { firebaseAuth ->
+                            val user = firebaseAuth.currentUser
+                            startDestination = if (user != null && user.isEmailVerified) {
+                                "home"
+                            } else {
+                                "login"
+                            }
+                        }
+
+                        // Initial check
+                        auth.currentUser?.let {
+                            try {
+                                it.reload().await() // Force refresh user data
+                                startDestination = if (it.isEmailVerified) "home" else "login"
+                            } catch (e: Exception) {
+                                // Handle error if needed
+                            }
+                        }
                     }
 
                     NavGraph(
@@ -52,7 +73,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        // Check if user needs to be redirected after email verification
-        Firebase.auth.currentUser?.reload()
+        // Refresh user data when activity starts
+        auth.currentUser?.reload()
     }
 }

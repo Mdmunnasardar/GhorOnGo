@@ -1,4 +1,4 @@
-package com.example.ghorongo.presentation.auth
+package com.example.ghorongo.ui.screens.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
