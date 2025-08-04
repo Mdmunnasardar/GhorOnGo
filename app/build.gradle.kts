@@ -111,5 +111,6 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
 
 }
