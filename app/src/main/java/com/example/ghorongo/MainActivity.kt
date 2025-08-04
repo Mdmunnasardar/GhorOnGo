@@ -3,77 +3,82 @@ package com.example.ghorongo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.example.ghorongo.presentation.navigation.NavGraph
+import com.example.ghorongo.ui.screens.auth.CheckEmailScreen
+import com.example.ghorongo.ui.screens.auth.ForgotPasswordScreen
+import com.example.ghorongo.ui.screens.auth.LoginScreen
+import com.example.ghorongo.ui.screens.auth.SignUpScreen
+import com.example.ghorongo.ui.screens.homescreen.HomeScreen
 import com.example.ghorongo.ui.theme.GhorOnGoTheme
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
 
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth.apply {
-            setLanguageCode("en") // Set language for auth emails
-        }
 
-        enableEdgeToEdge()
+        // 🧪 Sign out for testing so you see Login screen
+        Firebase.auth.signOut()  // ⛔ REMOVE THIS in production
+
         setContent {
             GhorOnGoTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
-                    var startDestination by remember { mutableStateOf("login") }
-
-                    // Use LaunchedEffect to handle auth state changes reactively
-                    LaunchedEffect(Unit) {
-                        auth.addAuthStateListener { firebaseAuth ->
-                            val user = firebaseAuth.currentUser
-                            startDestination = if (user != null && user.isEmailVerified) {
-                                "home"
-                            } else {
-                                "login"
-                            }
-                        }
-
-                        // Initial check
-                        auth.currentUser?.let {
-                            try {
-                                it.reload().await() // Force refresh user data
-                                startDestination = if (it.isEmailVerified) "home" else "login"
-                            } catch (e: Exception) {
-                                // Handle error if needed
-                            }
-                        }
-                    }
-
-                    NavGraph(
-                        navController = navController,
-                        startDestination = startDestination
-                    )
+                    AppNavigation()
                 }
             }
         }
     }
+}
 
-    override fun onStart() {
-        super.onStart()
-        // Refresh user data when activity starts
-        auth.currentUser?.reload()
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+    val auth = Firebase.auth
+    var initialRoute by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        initialRoute = if (auth.currentUser != null) {
+            "home"
+        } else {
+            "auth"
+        }
+    }
+
+    if (initialRoute == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    NavHost(
+        navController = navController,
+        startDestination = initialRoute!!
+    ) {
+        navigation(startDestination = "login", route = "auth") {
+            composable("login") { LoginScreen(navController) }
+            composable("signup") { SignUpScreen(navController) }
+            composable("forgotPassword") { ForgotPasswordScreen(navController) }
+            composable("checkEmail") { CheckEmailScreen(navController) }
+        }
+
+        composable("home") { HomeScreen() }
     }
 }
