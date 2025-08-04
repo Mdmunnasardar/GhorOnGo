@@ -101,7 +101,6 @@ fun LoginScreen(
                 singleLine = true
             )
 
-            // LoginScreen.kt
             Button(
                 onClick = {
                     if (viewModel.email.isNotBlank() && viewModel.password.isNotBlank()) {
@@ -125,14 +124,15 @@ fun LoginScreen(
                     Text("Login")
                 }
             }
-            // ✅ Navigate to Forgot Password screen
+
+            // Fixed navigation route here:
             TextButton(
                 onClick = {
-                    navController.navigate("forgot_password")
+                    navController.navigate("forgot_password")  // <-- Correct route name
                 },
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Text("Forgot Password?", color = Color.White)
+                Text("Forget Password?", color = Color.White)
             }
 
             // Sign Up
@@ -147,7 +147,6 @@ fun LoginScreen(
                 )
             }
 
-            // Error Message
             viewModel.errorMessage?.let { error ->
                 Text(
                     text = error,
@@ -156,7 +155,6 @@ fun LoginScreen(
                 )
             }
 
-            // Success Message
             viewModel.successMessage?.let { message ->
                 Text(
                     text = message,

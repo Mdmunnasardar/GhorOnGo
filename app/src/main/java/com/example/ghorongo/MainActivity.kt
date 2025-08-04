@@ -75,8 +75,8 @@ fun AppNavigation() {
         navigation(startDestination = "login", route = "auth") {
             composable("login") { LoginScreen(navController) }
             composable("signup") { SignUpScreen(navController) }
-            composable("forgotPassword") { ForgotPasswordScreen(navController) }
-            composable("checkEmail") { CheckEmailScreen(navController) }
+            composable("forgot_password") { ForgotPasswordScreen(navController) }
+            composable("check_email") { CheckEmailScreen(navController) }
         }
 
         composable("home") { HomeScreen() }

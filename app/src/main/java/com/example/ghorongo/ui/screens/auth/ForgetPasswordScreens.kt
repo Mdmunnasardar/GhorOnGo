@@ -13,14 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ghorongo.presentation.auth.AuthViewModel
-
 @Composable
 fun ForgotPasswordScreen(
     navController: NavController,
     authViewModel: AuthViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-
     var localEmail by remember { mutableStateOf(TextFieldValue("")) }
 
     Column(
@@ -40,7 +37,8 @@ fun ForgotPasswordScreen(
             value = localEmail,
             onValueChange = {
                 localEmail = it
-                authViewModel.email = it.text // Sync with ViewModel
+                authViewModel.email = it.text.trim() // Trim spaces
+                authViewModel.clearMessages()       // Clear previous messages on new input
             },
             label = { Text("Email") },
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon") },
@@ -54,13 +52,17 @@ fun ForgotPasswordScreen(
             onClick = {
                 authViewModel.sendPasswordReset(
                     onSuccess = {
-                        navController.navigate("check_email")
+                        navController.navigate("check_email") {
+                            // Clear forgot_password from back stack so user can't navigate back to it
+                            popUpTo("forgot_password") { inclusive = true }
+                            launchSingleTop = true
+                        }
                     },
                     onFailure = {}
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            enabled = !authViewModel.isLoading
+            enabled = !authViewModel.isLoading && localEmail.text.isNotBlank() && android.util.Patterns.EMAIL_ADDRESS.matcher(localEmail.text).matches()
         ) {
             if (authViewModel.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)

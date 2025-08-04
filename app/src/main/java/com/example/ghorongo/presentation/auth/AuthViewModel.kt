@@ -27,27 +27,25 @@ class AuthViewModel : ViewModel() {
     var errorMessage by mutableStateOf<String?>(null)
     var successMessage by mutableStateOf<String?>(null)
 
-    // AuthViewModel.kt
     fun login(navController: NavController) = viewModelScope.launch {
         try {
             isLoading = true
             errorMessage = null
 
-            // Basic check for empty fields
             if (email.isBlank() || password.isBlank()) {
                 errorMessage = "Please fill in all fields"
                 return@launch
             }
 
-            val result = auth.signInWithEmailAndPassword(email, password).await()
+            auth.signInWithEmailAndPassword(email, password).await()
 
-            // Navigate to home screen on success
+            // Navigate to home screen with proper backstack handling
             navController.navigate("home") {
                 popUpTo("login") { inclusive = true }
+                launchSingleTop = true
             }
         } catch (e: Exception) {
             errorMessage = "Login failed: ${e.message}"
-            // Don't crash, just show error
         } finally {
             isLoading = false
         }
@@ -58,7 +56,6 @@ class AuthViewModel : ViewModel() {
             isLoading = true
             errorMessage = null
 
-            // Basic field checks
             when {
                 fullName.isBlank() -> {
                     errorMessage = "Please enter your name"
@@ -77,7 +74,6 @@ class AuthViewModel : ViewModel() {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             result.user?.sendEmailVerification()?.await()
 
-            // Show success and navigate back
             successMessage = "Account created! Please verify your email."
             navController.popBackStack()
         } catch (e: Exception) {
@@ -86,6 +82,7 @@ class AuthViewModel : ViewModel() {
             isLoading = false
         }
     }
+
     fun sendPasswordReset(
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
@@ -97,6 +94,7 @@ class AuthViewModel : ViewModel() {
 
             auth.sendPasswordResetEmail(email).await()
             successMessage = "Password reset link sent"
+
             onSuccess()
 
         } catch (e: Exception) {
