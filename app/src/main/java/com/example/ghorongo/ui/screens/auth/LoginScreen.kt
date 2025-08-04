@@ -101,9 +101,15 @@ fun LoginScreen(
                 singleLine = true
             )
 
-            // Login Button
+            // LoginScreen.kt
             Button(
-                onClick = { viewModel.login(navController) },
+                onClick = {
+                    if (viewModel.email.isNotBlank() && viewModel.password.isNotBlank()) {
+                        viewModel.login(navController)
+                    } else {
+                        viewModel.errorMessage = "Please fill in all fields"
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -119,7 +125,6 @@ fun LoginScreen(
                     Text("Login")
                 }
             }
-
             // ✅ Navigate to Forgot Password screen
             TextButton(
                 onClick = {
@@ -163,8 +168,3 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(navController = rememberNavController())
-}

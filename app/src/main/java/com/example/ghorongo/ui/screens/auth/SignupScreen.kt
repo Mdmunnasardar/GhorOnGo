@@ -126,12 +126,22 @@ fun SignUpScreen(
             )
 
             // Sign Up Button
+            // SignUpScreen.kt
             Button(
                 onClick = {
-                    if (viewModel.password == viewModel.confirmPassword) {
-                        viewModel.signUp(navController)
-                    } else {
-                        Toast.makeText(context, "Passwords don't match", Toast.LENGTH_SHORT).show()
+                    when {
+                        viewModel.fullName.isBlank() -> {
+                            viewModel.errorMessage = "Please enter your name"
+                        }
+                        viewModel.password.length < 6 -> {
+                            viewModel.errorMessage = "Password needs 6+ characters"
+                        }
+                        viewModel.password != viewModel.confirmPassword -> {
+                            viewModel.errorMessage = "Passwords don't match"
+                        }
+                        else -> {
+                            viewModel.signUp(navController)
+                        }
                     }
                 },
                 modifier = Modifier
