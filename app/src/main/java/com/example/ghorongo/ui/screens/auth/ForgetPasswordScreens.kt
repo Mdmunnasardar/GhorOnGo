@@ -48,11 +48,6 @@ fun ForgotPasswordScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        authViewModel.emailError?.let {
-            Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
