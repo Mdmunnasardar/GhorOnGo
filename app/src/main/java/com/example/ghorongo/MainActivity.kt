@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // 🧪 Sign out for testing so you see Login screen
-        Firebase.auth.signOut()  // ⛔ REMOVE THIS in production
+       // Firebase.auth.signOut()  // ⛔ REMOVE THIS in production
 
         setContent {
             GhorOnGoTheme {
