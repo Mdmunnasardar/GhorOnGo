@@ -55,6 +55,9 @@ dependencies {
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.foundation.layout)
     implementation(libs.ui)
+    implementation(libs.material3)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.ui.text)
     //implementation(libs.material3)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -112,5 +115,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
+    //implementation("androidx.compose.material3:material3:1.2.0")
 
 }
