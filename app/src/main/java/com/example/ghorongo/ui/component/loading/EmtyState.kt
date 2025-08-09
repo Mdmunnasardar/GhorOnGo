@@ -1,4 +1,4 @@
-package com.example.ghorongo.ui.loading
+package com.example.ghorongo.ui.component.loading
 
 // Imports
 import android.annotation.SuppressLint
