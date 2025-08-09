@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.ghorongo.ui.component.dashboard.DashboardUiState
 import com.example.ghorongo.ui.component.search.SearchBar
 import com.example.ghorongo.ui.component.text.SectionHeader
-import com.example.ghorongo.ui.loading.EmptyState
+import com.example.ghorongo.ui.component.loading.EmptyState
 
 @Composable
 fun DashboardScreen(
