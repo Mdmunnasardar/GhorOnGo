@@ -40,68 +40,56 @@ android {
         compose = true
     }
 }
-
 dependencies {
-    // Core Android + Compose
+    // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose BOM (Bill of Materials) - Manages versions for all Compose libraries
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.ads.mobile.sdk)
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.foundation.layout)
-    implementation(libs.ui)
-    implementation(libs.material3)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.ui.text)
-    //implementation(libs.material3)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
-    // Firebase (using BoM only)
-    //The BoM is a special Gradle file published by Google that:
+    // Firebase (using BoM)
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")  // Added for storage
 
-    //Contains a curated list of versions that work together
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    //Automatically applies the correct versions to all Firebase libraries
+    // Hilt (Dependency Injection)
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    //Gets updated with tested, stable combinations
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // Latest stable
-    implementation("com.google.firebase:firebase-auth-ktx") // KTX version
-    implementation("com.google.firebase:firebase-firestore-ktx") // KTX version
+    // Image Loading
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     // Credentials
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    kapt("androidx.hilt:hilt-compiler:1.2.0")
-
-    // Image Loading
-    implementation("io.coil-kt:coil-compose:2.6.0")
-
-    // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-
-    // Accompanist
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
-
-    // Lottie
+    // Lottie Animations
     implementation("com.airbnb.android:lottie-compose:4.2.0")
 
     // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Debug Implementations
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // Testing
     testImplementation(libs.junit)
@@ -109,12 +97,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:<latest_version>")
-    implementation("androidx.navigation:navigation-compose:<latest_version>")
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
-    //implementation("androidx.compose.material3:material3:1.2.0")
-
 }
