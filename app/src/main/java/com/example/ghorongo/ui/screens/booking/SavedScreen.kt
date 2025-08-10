@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun SavedScreen() {
-    Text("Profile Screen")
+    Text("Saved Screen")
 }
