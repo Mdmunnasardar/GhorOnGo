@@ -21,6 +21,8 @@ foundationLayout = "1.8.3"
 ui = "1.8.3"
 composeMaterial3 = "1.5.0-rc01"
 uiText = "1.8.3"
+firebaseStorageKtx = "22.0.0"
+firebaseDatabase = "22.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +51,8 @@ androidx-foundation-layout = { group = "androidx.compose.foundation", name = "fo
 ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 androidx-compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "composeMaterial3" }
 androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
