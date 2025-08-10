@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import com.example.ghorongo.ui.component.dashboard.DashboardUiState
 import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
 import androidx.compose.runtime.Composable
+import com.example.ghorongo.ui.screens.dashboard.FiltersScreen
+import com.example.ghorongo.ui.screens.dashboard.RoomDetailScreen
 
 fun NavGraphBuilder.dashboardNavGraph(
     navController: NavHostController,
@@ -40,12 +42,3 @@ fun NavGraphBuilder.dashboardNavGraph(
     }
 }
 
-@Composable
-fun RoomDetailScreen(roomId: Int) {
-    // TODO: Implement Room Detail UI here
-}
-
-@Composable
-fun FiltersScreen(onBack: () -> Unit) {
-    // TODO: Implement Filters UI here
-}
