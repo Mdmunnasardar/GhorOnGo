@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun MessageScreen() {
-    Text("Profile Screen")
+    Text("Message  Screen")
 }
