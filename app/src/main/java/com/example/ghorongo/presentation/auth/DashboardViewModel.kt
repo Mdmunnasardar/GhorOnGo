@@ -1,25 +1,36 @@
 package com.example.ghorongo.presentation.auth
 import androidx.lifecycle.ViewModel
+import com.example.ghorongo.data.model.Room
 import com.example.ghorongo.ui.component.dashboard.DashboardUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 import kotlinx.coroutines.flow.StateFlow
-
+import kotlinx.coroutines.flow.asStateFlow
 class DashboardViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState())
-    val uiState: StateFlow<DashboardUiState> = _uiState
+    private val sampleRooms = listOf(
+        Room(1, "Living Room"),
+        Room(2, "Dining Room"),
+        Room(3, "Bedroom"),
+        Room(4, "Kitchen"),
+        Room(5, "Guest Room")
+    )
+
+    private val _uiState = MutableStateFlow(
+        DashboardUiState(rooms = sampleRooms)
+    )
+    val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
     fun onQueryChange(newQuery: String) {
         _uiState.value = _uiState.value.copy(query = newQuery)
-        // Add logic to update room list or filter
     }
 
-    fun onSearch() {
-        // Implement search logic (maybe fetch rooms based on query)
+    fun onSearch(query: String) {
+        val filteredRooms = sampleRooms.filter { it.name.contains(query, ignoreCase = true) }
+        _uiState.value = _uiState.value.copy(rooms = filteredRooms)
     }
 
     fun onRetry() {
-        // Retry loading rooms logic
+        _uiState.value = _uiState.value.copy(rooms = sampleRooms)
     }
 }

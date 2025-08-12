@@ -7,22 +7,20 @@ import androidx.navigation.navArgument
 import androidx.navigation.NavType
 import com.example.ghorongo.ui.component.dashboard.DashboardUiState
 import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
-import androidx.compose.runtime.Composable
 import com.example.ghorongo.ui.screens.dashboard.FiltersScreen
 import com.example.ghorongo.ui.screens.dashboard.RoomDetailScreen
-
 fun NavGraphBuilder.dashboardNavGraph(
     navController: NavHostController,
     dashboardUiState: DashboardUiState,
     onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
+    onSearch: (String) -> Unit,  // eta must accept String parameter
     onRetry: () -> Unit
 ) {
     composable("dashboard") {
         DashboardScreen(
             state = dashboardUiState,
             onQueryChange = onQueryChange,
-            onSearch = onSearch,
+            onSearch = onSearch,  // direct pass without cast
             onRetry = onRetry,
             onFilterClick = { navController.navigate("filters") },
             onRoomClick = { roomId -> navController.navigate("room_detail/$roomId") }
@@ -41,4 +39,3 @@ fun NavGraphBuilder.dashboardNavGraph(
         RoomDetailScreen(roomId = roomId)
     }
 }
-
