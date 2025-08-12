@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -40,13 +41,14 @@ android {
         compose = true
     }
 }
+
 dependencies {
     // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
-    // Compose BOM (Bill of Materials) - Manages versions for all Compose libraries
+    // Compose BOM
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -59,24 +61,27 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
-    // Firebase (using BoM)
+    // Firebase (BoM)
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")  // Added for storage
+    implementation("com.google.firebase:firebase-storage-ktx")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    // Hilt (Dependency Injection)
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    // Hilt (Use consistent version 2.51.1)
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.material3)
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
+    // Hilt Navigation Compose
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Image Loading
     implementation("io.coil-kt:coil-compose:2.6.0")
 
-    // Credentials
+    // Credentials & Google ID
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
@@ -87,7 +92,7 @@ dependencies {
     // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    // Debug Implementations
+    // Debug
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
