@@ -1,55 +1,37 @@
 package com.example.ghorongo
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.example.ghorongo.presentation.auth.DashboardViewModel
-import com.example.ghorongo.presentation.navigation.BottomNavBar
-import com.example.ghorongo.presentation.navigation.BottomNavItem
 import com.example.ghorongo.ui.screens.auth.CheckEmailScreen
 import com.example.ghorongo.ui.screens.auth.ForgotPasswordScreen
 import com.example.ghorongo.ui.screens.auth.LoginScreen
 import com.example.ghorongo.ui.screens.auth.SignUpScreen
-import com.example.ghorongo.ui.screens.booking.SavedScreen
-import com.example.ghorongo.ui.screens.chat.MessageScreen
-import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
-import com.example.ghorongo.ui.screens.dashboard.FiltersScreen
-import com.example.ghorongo.ui.screens.dashboard.RoomDetailScreen
 import com.example.ghorongo.ui.screens.homescreen.HomeScreen
-import com.example.ghorongo.ui.screens.profile.ProfileScreen
 import com.example.ghorongo.ui.theme.GhorOnGoTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 🧪 Sign out for testing so you see Login screen
-        // Firebase.auth.signOut()  // ⛔ REMOVE THIS in production
+        // 🧪 For testing sign out — remove in production
+        //Firebase.auth.signOut()
 
         setContent {
             GhorOnGoTheme {
@@ -96,10 +78,9 @@ fun AppNavigation() {
             composable("check_email") { CheckEmailScreen(navController) }
         }
 
-        // Home screen is a big screen with bottom nav + nested navHost
+        // Home graph
         composable("home") {
             HomeScreen()
         }
     }
 }
-
