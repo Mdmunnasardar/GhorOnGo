@@ -1,4 +1,4 @@
-package com.example.ghorongo
+package com.example.ghorongo.ui.component.dashboard
 
 annotation class Home
 @Home
