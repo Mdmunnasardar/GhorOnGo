@@ -5,38 +5,42 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.HomeWork
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.ghorongo.ui.component.dashboard.DashboardUiState
-import com.example.ghorongo.ui.component.search.SearchBar
+
 import com.example.ghorongo.ui.component.text.SectionHeader
 import com.example.ghorongo.ui.component.loading.EmptyState
-
+import com.example.ghorongo.ui.component.search.SearchBar
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     state: DashboardUiState,
     onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
+    onSearch: (String) -> Unit,
     onRetry: () -> Unit,
     onFilterClick: () -> Unit,
-    onRoomClick: (Int) -> Unit  // Add room click callback
+    onRoomClick: (Int) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         SearchBar(
             query = state.query,
             onQueryChange = onQueryChange,
             onSearch = onSearch,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
         when {
             state.isLoading -> {
-                LoadingIndicator()
+                LoadingIndicator(modifier = Modifier.fillMaxSize())
             }
-
             state.rooms.isEmpty() -> {
                 EmptyState(
                     title = "No Rooms Found",
@@ -47,20 +51,17 @@ fun DashboardScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-
             else -> {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    SectionHeader(title = "Suggested Rooms")
-
-                    // Placeholder for your rooms list (replace with your RoomCard if available)
+                    Text("Suggested Rooms", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
                     state.rooms.forEach { room ->
                         Text(
-                            text = room.name,  // assuming your room has a `name` property
-                            style = MaterialTheme.typography.bodyMedium,
+                            text = room.name,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clickable { onRoomClick(room.id) }
                                 .padding(vertical = 8.dp)
-                                .clickable { onRoomClick(room.id) } // room click triggers navigation
                         )
                     }
                 }
