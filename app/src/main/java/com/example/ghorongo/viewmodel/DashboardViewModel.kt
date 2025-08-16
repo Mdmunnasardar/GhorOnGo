@@ -1,11 +1,12 @@
-package com.example.ghorongo.presentation.auth
+package com.example.ghorongo.viewmodel
+
 import androidx.lifecycle.ViewModel
 import com.example.ghorongo.data.model.Room
 import com.example.ghorongo.ui.component.dashboard.DashboardUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 class DashboardViewModel : ViewModel() {
 
     private val sampleRooms = listOf(

@@ -25,15 +25,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ghorongo.R
-import com.example.ghorongo.presentation.auth.AuthViewModel
+import com.example.ghorongo.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel  // ✅ pass ViewModel from AppNavigation
 ) {
 
     Box(
@@ -73,8 +72,8 @@ fun LoginScreen(
 
             // Email Field
             OutlinedTextField(
-                value = viewModel.email,
-                onValueChange = { viewModel.email = it },
+                value = authViewModel.email,
+                onValueChange = { authViewModel.email = it },
                 label = { Text("Email", color = Color.White) },
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color.White,
@@ -92,8 +91,8 @@ fun LoginScreen(
 
             // Password Field
             OutlinedTextField(
-                value = viewModel.password,
-                onValueChange = { viewModel.password = it },
+                value = authViewModel.password,
+                onValueChange = { authViewModel.password = it },
                 label = { Text("Password", color = Color.White) },
                 visualTransformation = PasswordVisualTransformation(),
                 colors = TextFieldDefaults.colors(
@@ -112,18 +111,18 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    if (viewModel.email.isNotBlank() && viewModel.password.isNotBlank()) {
-                        viewModel.login(navController)
+                    if (authViewModel.email.isNotBlank() && authViewModel.password.isNotBlank()) {
+                        authViewModel.login(navController)
                     } else {
-                        viewModel.errorMessage = "Please fill in all fields"
+                        authViewModel.errorMessage = "Please fill in all fields"
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                enabled = !viewModel.isLoading
+                enabled = !authViewModel.isLoading
             ) {
-                if (viewModel.isLoading) {
+                if (authViewModel.isLoading) {
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.onPrimary,
                         strokeWidth = 2.dp,
@@ -134,10 +133,9 @@ fun LoginScreen(
                 }
             }
 
-            // Fixed navigation route here:
             TextButton(
                 onClick = {
-                    navController.navigate("forgot_password")  // <-- Correct route name
+                    navController.navigate("forgot_password")
                 },
                 modifier = Modifier.padding(top = 8.dp)
             ) {
@@ -155,8 +153,9 @@ fun LoginScreen(
                     color = Color(0xFFFFD700) // Gold color
                 )
             }
-//toast use
-            viewModel.errorMessage?.let { error ->
+
+            // Show error or success messages
+            authViewModel.errorMessage?.let { error ->
                 Text(
                     text = error,
                     color = Color(0xFFFF5252),
@@ -164,7 +163,7 @@ fun LoginScreen(
                 )
             }
 
-            viewModel.successMessage?.let { message ->
+            authViewModel.successMessage?.let { message ->
                 Text(
                     text = message,
                     color = Color(0xFF69F0AE),
@@ -174,6 +173,3 @@ fun LoginScreen(
         }
     }
 }
-
-
-

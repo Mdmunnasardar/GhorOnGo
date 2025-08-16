@@ -1,24 +1,40 @@
 package com.example.ghorongo.ui.screens.auth
 
-import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ghorongo.presentation.auth.AuthViewModel
+import com.example.ghorongo.viewmodel.AuthViewModel
 
 @Composable
 fun SignUpScreen(
     navController: NavController,
-    viewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current
 
@@ -49,8 +65,8 @@ fun SignUpScreen(
 
             // Full Name Field
             OutlinedTextField(
-                value = viewModel.fullName,
-                onValueChange = { viewModel.fullName = it },
+                value = authViewModel.fullName,
+                onValueChange = { authViewModel.fullName = it },
                 label = { Text("Full Name", color = Color.White) },
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color.White,
@@ -68,8 +84,8 @@ fun SignUpScreen(
 
             // Email Field
             OutlinedTextField(
-                value = viewModel.email,
-                onValueChange = { viewModel.email = it },
+                value = authViewModel.email,
+                onValueChange = { authViewModel.email = it },
                 label = { Text("Email", color = Color.White) },
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color.White,
@@ -87,8 +103,8 @@ fun SignUpScreen(
 
             // Password Field
             OutlinedTextField(
-                value = viewModel.password,
-                onValueChange = { viewModel.password = it },
+                value = authViewModel.password,
+                onValueChange = { authViewModel.password = it },
                 label = { Text("Password", color = Color.White) },
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color.White,
@@ -107,8 +123,8 @@ fun SignUpScreen(
 
             // Confirm Password Field
             OutlinedTextField(
-                value = viewModel.confirmPassword,
-                onValueChange = { viewModel.confirmPassword = it },
+                value = authViewModel.confirmPassword,
+                onValueChange = { authViewModel.confirmPassword = it },
                 label = { Text("Confirm Password", color = Color.White) },
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color.White,
@@ -124,32 +140,78 @@ fun SignUpScreen(
                     .padding(bottom = 16.dp),
                 singleLine = true
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(
+                    text = "I am a:",
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = authViewModel.userType == "tenant",
+                        onClick = { authViewModel.userType = "tenant" },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = Color.White,
+                            unselectedColor = Color.White.copy(alpha = 0.6f)
+                        )
+                    )
+                    Text(
+                        text = "Tenant",
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    RadioButton(
+                        selected = authViewModel.userType == "landlord",
+                        onClick = { authViewModel.userType = "landlord" },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = Color.White,
+                            unselectedColor = Color.White.copy(alpha = 0.6f)
+                        )
+                    )
+                    Text(
+                        text = "Landlord",
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
 
             // Sign Up Button
             // SignUpScreen.kt
             Button(
                 onClick = {
                     when {
-                        viewModel.fullName.isBlank() -> {
-                            viewModel.errorMessage = "Please enter your name"
+                        authViewModel.fullName.isBlank() -> {
+                            authViewModel.errorMessage = "Please enter your name"
                         }
-                        viewModel.password.length < 6 -> {
-                            viewModel.errorMessage = "Password needs 6+ characters"
+                        authViewModel.password.length < 6 -> {
+                            authViewModel.errorMessage = "Password needs 6+ characters"
                         }
-                        viewModel.password != viewModel.confirmPassword -> {
-                            viewModel.errorMessage = "Passwords don't match"
+                        authViewModel.password != authViewModel.confirmPassword -> {
+                            authViewModel.errorMessage = "Passwords don't match"
                         }
                         else -> {
-                            viewModel.signUp(navController)
+                            authViewModel.signUp(navController)
                         }
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                enabled = !viewModel.isLoading
+                enabled = !authViewModel.isLoading
             ) {
-                if (viewModel.isLoading) {
+                if (authViewModel.isLoading) {
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.onPrimary,
                         strokeWidth = 2.dp,
@@ -173,7 +235,7 @@ fun SignUpScreen(
             }
 
             // Error Message
-            viewModel.errorMessage?.let { error ->
+            authViewModel.errorMessage?.let { error ->
                 Text(
                     text = error,
                     color = Color(0xFFFF5252), // Light red
@@ -182,7 +244,7 @@ fun SignUpScreen(
             }
 
             // Success Message
-            viewModel.successMessage?.let { message ->
+            authViewModel.successMessage?.let { message ->
                 Text(
                     text = message,
                     color = Color(0xFF69F0AE), // Light green

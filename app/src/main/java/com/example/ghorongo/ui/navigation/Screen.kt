@@ -1,4 +1,4 @@
-package com.example.ghorongo.presentation.navigation
+package com.example.ghorongo.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message

@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -70,13 +68,7 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    // Hilt (Use consistent version 2.51.1)
-    implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.material3)
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
-
-    // Hilt Navigation Compose
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Image Loading
     implementation("io.coil-kt:coil-compose:2.6.0")
