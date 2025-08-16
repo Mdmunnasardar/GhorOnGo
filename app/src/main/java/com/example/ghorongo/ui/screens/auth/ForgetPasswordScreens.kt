@@ -33,7 +33,7 @@ import com.example.ghorongo.viewmodel.AuthViewModel
 @Composable
 fun ForgotPasswordScreen(
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
     var localEmail by remember { mutableStateOf(TextFieldValue("")) }
     Column(
