@@ -1,4 +1,4 @@
-package com.example.ghorongo.presentation.navigation
+package com.example.ghorongo.ui.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController

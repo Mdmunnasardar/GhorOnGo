@@ -15,8 +15,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.ghorongo.presentation.profile.ProfileViewModel
-import com.example.ghorongo.presentation.profile.UserProfile
+import com.example.ghorongo.viewmodel.ProfileViewModel
+import com.example.ghorongo.viewmodel.UserProfile
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)

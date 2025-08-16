@@ -1,4 +1,4 @@
-package com.example.ghorongo.presentation.profile
+package com.example.ghorongo.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
