@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.ghorongo" />
-                  <option name="mobileSdkAppId" value="1:853518611616:android:c78507bd34bcd7a3e805c5" />
-                  <option name="projectId" value="ghorongo14" />
-                  <option name="projectNumber" value="853518611616" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
