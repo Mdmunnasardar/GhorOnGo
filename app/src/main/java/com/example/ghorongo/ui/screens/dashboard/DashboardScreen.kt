@@ -1,13 +1,19 @@
 package com.example.ghorongo.ui.screens.dashboard
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.ghorongo.ui.component.dashboard.DashboardUiState
-import com.example.ghorongo.ui.component.search.SearchBar
 import com.example.ghorongo.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -15,9 +21,6 @@ import com.example.ghorongo.viewmodel.AuthViewModel
 fun DashboardScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
-    state: DashboardUiState,
-    onQueryChange: (String) -> Unit,
-    onSearch: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -40,13 +43,6 @@ fun DashboardScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // Search Bar
-            SearchBar(
-                query = state.query,
-                onQueryChange = onQueryChange,
-                onSearch = onSearch,
-                modifier = Modifier.fillMaxWidth()
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

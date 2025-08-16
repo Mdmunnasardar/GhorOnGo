@@ -13,10 +13,6 @@ import com.example.ghorongo.ui.theme.GhorOnGoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 🧪 For testing sign out — remove in production
-        //Firebase.auth.signOut()
-
         setContent {
             GhorOnGoTheme {
                 Surface(

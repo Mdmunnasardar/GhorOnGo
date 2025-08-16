@@ -3,11 +3,15 @@ package com.example.ghorongo.ui.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -15,13 +19,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.ghorongo.data.repository.UserRepository
 import com.example.ghorongo.ui.component.auth.UserTypeSelectionScreen
-import com.example.ghorongo.ui.component.dashboard.DashboardUiState
 import com.example.ghorongo.ui.screens.auth.CheckEmailScreen
 import com.example.ghorongo.ui.screens.auth.ForgotPasswordScreen
 import com.example.ghorongo.ui.screens.auth.LoginScreen
 import com.example.ghorongo.ui.screens.auth.SignUpScreen
-import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
-import com.example.ghorongo.ui.screens.dashboard.FiltersScreen
 import com.example.ghorongo.ui.screens.dashboard.RoomDetailScreen
 import com.example.ghorongo.ui.screens.homescreen.MainScreen
 import com.example.ghorongo.viewmodel.AuthViewModel
@@ -41,7 +42,6 @@ fun AppNavigation() {
     var initialRoute by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        // FIX: start at the correct NavGraph
         initialRoute = if (auth.currentUser != null) "main_graph" else "auth"
     }
 
@@ -68,32 +68,42 @@ fun AppNavigation() {
             composable("user_type_selection") { UserTypeSelectionScreen(navController, authViewModel) }
         }
 
-        // Main graph (nested)
+        // Main graph
         navigation(startDestination = "dashboard", route = "main_graph") {
-            // Optional: MainScreen route
-            composable("main") { MainScreen() }
-
-            // Dashboard
+            // Bottom nav screens
             composable("dashboard") {
-                DashboardScreen(
+                MainScreen(
                     navController = navController,
                     authViewModel = authViewModel,
-                    state = remember { DashboardUiState() },
-                    onQueryChange = {},
-                    onSearch = {},
-                    modifier = Modifier.fillMaxSize()
+                    startRoute = "dashboard"
+                )
+            }
+            composable("profile") {
+                MainScreen(
+                    navController = navController,
+                    authViewModel = authViewModel,
+                    startRoute = "profile"
+                )
+            }
+            composable("saved") {
+                MainScreen(
+                    navController = navController,
+                    authViewModel = authViewModel,
+                    startRoute = "saved"
+                )
+            }
+            composable("message") {
+                MainScreen(
+                    navController = navController,
+                    authViewModel = authViewModel,
+                    startRoute = "message"
                 )
             }
 
-            // Filters
-            composable("filters") {
-                FiltersScreen(onBack = { navController.popBackStack() })
-            }
-
-            // Room detail
+            // Detail screens
             composable(
                 "room_detail/{roomId}",
-                arguments = listOf(navArgument("roomId") { type = NavType.IntType })
+                arguments = listOf(navArgument("roomId") { type = androidx.navigation.NavType.IntType })
             ) { backStackEntry ->
                 val roomId = backStackEntry.arguments?.getInt("roomId") ?: -1
                 RoomDetailScreen(roomId = roomId)
