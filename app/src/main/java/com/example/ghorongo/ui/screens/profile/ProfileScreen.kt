@@ -1,3 +1,4 @@
+// ProfileScreen.kt
 package com.example.ghorongo.ui.screens.profile
 
 import android.net.Uri
@@ -5,77 +6,90 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.ghorongo.presentation.profile.ProfileViewModel
-import com.example.ghorongo.presentation.profile.UserProfile
-import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(profileViewModel: ProfileViewModel = viewModel()) {
-    val profile by profileViewModel.profile.collectAsState()
-    val loading by profileViewModel.loading.collectAsState()
+fun ProfileScreen() {
+    val scrollState = rememberScrollState()
 
-    // Local state for form fields
-    var name by remember { mutableStateOf("") }
+    // Local states
+    var fullName by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("demo@example.com") }
+    var profileImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-
-    // Collect errors from ViewModel and show as Snackbars
-    LaunchedEffect(Unit) {
-        profileViewModel.error.collectLatest { message ->
-            snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
-        }
-    }
-
-    // Populate form fields when profile loads or changes
-    LaunchedEffect(profile) {
-        profile?.let {
-            name = it.name
-            address = it.address
-            phone = it.phone
-            email = it.email
-        }
-    }
-
+    // Image picker
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { profileViewModel.uploadNationalIdImage(it) }
+        profileImageUri = uri
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Profile") }
+            )
+        }
     ) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(16.dp)
-                .fillMaxWidth()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (loading) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                Spacer(modifier = Modifier.height(16.dp))
+            // Profile Picture
+            if (profileImageUri != null) {
+                Image(
+                    painter = rememberAsyncImagePainter(profileImageUri),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier.size(120.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Profile Placeholder",
+                    modifier = Modifier.size(120.dp)
+                )
             }
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(onClick = { imagePicker.launch("image/*") }) {
+                Text("Change Profile Picture")
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Input Fields
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Name") },
+                value = fullName,
+                onValueChange = { fullName = it },
+                label = { Text("Full Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = phoneNumber,
+                onValueChange = { phoneNumber = it },
+                label = { Text("Phone Number") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -91,77 +105,20 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
-                value = phone,
-                onValueChange = { phone = it },
-                label = { Text("Phone") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
                 value = email,
-                onValueChange = {},
+                onValueChange = { email = it },
                 label = { Text("Email") },
-                enabled = false,
+                enabled = false, // read-only
                 modifier = Modifier.fillMaxWidth()
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            profile?.let {
-                if (it.userType == "owner") {
-                    Text("National ID Verification", style = MaterialTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    if (!it.nationalIdUrl.isNullOrEmpty()) {
-                        Image(
-                            painter = rememberAsyncImagePainter(it.nationalIdUrl),
-                            contentDescription = "National ID",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(150.dp)
-                        )
-
-                        Text(
-                            text = if (it.isVerified) "Verified" else "Pending Verification",
-                            color = if (it.isVerified)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    } else {
-                        Text("No national ID uploaded")
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = { imagePicker.launch("image/*") }) {
-                        Text("Upload National ID")
-                    }
-                }
-            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {
-                    profileViewModel.updateProfile(
-                        UserProfile(
-                            name = name,
-                            address = address,
-                            phone = phone,
-                            email = email,
-                            userType = profile?.userType ?: "",
-                            nationalIdUrl = profile?.nationalIdUrl,
-                            isVerified = profile?.isVerified ?: false
-                        )
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !loading
+                onClick = { /* Later you can save profile */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 Text("Save Changes")
             }

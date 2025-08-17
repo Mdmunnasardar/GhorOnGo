@@ -1,5 +1,4 @@
-package com.example.ghorongo.ui.component.navitem
-
+package com.example.ghorongo.ui.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

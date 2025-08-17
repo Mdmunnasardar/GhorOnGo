@@ -28,12 +28,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ghorongo.presentation.auth.AuthViewModel
+import com.example.ghorongo.viewmodel.AuthViewModel
 
 @Composable
 fun ForgotPasswordScreen(
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
     var localEmail by remember { mutableStateOf(TextFieldValue("")) }
     Column(
