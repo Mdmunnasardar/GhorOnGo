@@ -19,12 +19,13 @@ class TenantProfileViewModel(
     var tenant by mutableStateOf<Tenant?>(null)
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
+    var isUpdating by mutableStateOf(false)
 
     init {
         loadTenantProfile()
     }
 
-    private fun loadTenantProfile() {
+    fun loadTenantProfile() {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
@@ -32,17 +33,35 @@ class TenantProfileViewModel(
             try {
                 val userId = Firebase.auth.currentUser?.uid ?: return@launch
                 when (val result = userRepository.getTenantProfile(userId)) {
-                    is Result.Success -> {
-                        tenant = result.data
-                    }
-                    is Result.Failure -> {
-                        errorMessage = "Failed to load profile: ${result.exception.message}"
-                    }
+                    is Result.Success -> tenant = result.data
+                    is Result.Failure -> errorMessage = "Failed to load profile: ${result.exception.message}"
                 }
             } catch (e: Exception) {
                 errorMessage = "Error loading profile: ${e.message}"
             } finally {
                 isLoading = false
+            }
+        }
+    }
+
+    fun updateTenantProfile(updatedTenant: Tenant, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            isUpdating = true
+            errorMessage = null
+
+            try {
+                val userId = Firebase.auth.currentUser?.uid ?: return@launch
+                when (val result = userRepository.updateTenantProfile(userId, updatedTenant)) {
+                    is Result.Success -> {
+                        tenant = updatedTenant
+                        onSuccess()
+                    }
+                    is Result.Failure -> errorMessage = "Failed to update profile: ${result.exception.message}"
+                }
+            } catch (e: Exception) {
+                errorMessage = "Error updating profile: ${e.message}"
+            } finally {
+                isUpdating = false
             }
         }
     }

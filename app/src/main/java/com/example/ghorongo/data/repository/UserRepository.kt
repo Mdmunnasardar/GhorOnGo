@@ -58,4 +58,37 @@ class UserRepository(
             Result.Failure(e)
         }
     }
+    suspend fun updateTenantProfile(userId: String, tenant: Tenant): Result<Unit> {
+        return try {
+            // Convert Date to Timestamp if needed
+            val data = hashMapOf<String, Any>().apply {
+                putAll(tenant.toMap()) // We'll add this extension function
+            }
+
+            db.collection("tenants").document(userId)
+                .update(data)
+                .await()
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Failure(e)
+        }
+    }
+
+    // Extension function to convert Tenant to Map (add this to your model file)
+    fun Tenant.toMap(): Map<String, Any> {
+        return mapOf(
+            "fullName" to fullName,
+            "profilePicture" to profilePicture,
+            "phoneNumber" to phoneNumber,
+            "email" to email,
+            "gender" to gender,
+            "dateOfBirth" to (dateOfBirth ?: ""),
+            "permanentAddress" to permanentAddress,
+            "currentAddress" to currentAddress,
+            "govtIdProof" to govtIdProof,
+            "govtIdNumber" to govtIdNumber,
+            // Include all other fields...
+            "updatedAt" to System.currentTimeMillis()
+        )
+    }
 }

@@ -48,7 +48,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.ghorongo.data.model.Tenant
@@ -56,6 +57,7 @@ import com.example.ghorongo.data.repository.UserRepository
 import com.example.ghorongo.ui.component.common.InfoItem
 import com.example.ghorongo.ui.theme.PrimaryColor
 import com.example.ghorongo.viewmodel.TenantProfileViewModel
+import com.example.ghorongo.viewmodel.TenantProfileViewModelFactory
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -63,9 +65,12 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TenantProfileScreen(
-    navController: NavController,
-    viewModel: TenantProfileViewModel = TenantProfileViewModel(UserRepository())
-) {
+    navController: NavHostController
+){
+    val viewModel: TenantProfileViewModel = viewModel(
+        factory = TenantProfileViewModelFactory(UserRepository())
+    )
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -93,7 +98,11 @@ fun TenantProfileScreen(
                     IconButton(onClick = { viewModel.refreshProfile() }) {
                         Icon(Icons.Default.Refresh, contentDescription = "Refresh")
                     }
-                    IconButton(onClick = { /* Handle edit */ }) {
+                    IconButton(onClick = {
+                        viewModel.tenant?.let { tenant ->
+                            navController.navigate("editTenantProfile/${tenant.userId}")
+                        }
+                    }) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
                     }
                 },

@@ -91,6 +91,7 @@ dependencies {
 
     // Splash Screen
     implementation(libs.androidx.splashscreen)
+    implementation("androidx.compose.foundation:foundation")
 
     // Testing
     testImplementation(libs.junit)

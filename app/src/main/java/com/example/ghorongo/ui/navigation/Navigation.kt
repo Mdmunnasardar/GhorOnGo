@@ -29,6 +29,10 @@ import com.example.ghorongo.viewmodel.AuthViewModelFactory
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.example.ghorongo.data.model.Result
+import com.example.ghorongo.ui.screens.profile.EditTenantProfileScreen
+import com.example.ghorongo.ui.screens.profile.TenantProfileScreen
+import com.example.ghorongo.viewmodel.TenantProfileViewModel
+import com.example.ghorongo.viewmodel.TenantProfileViewModelFactory
 
 @Composable
 fun AppNavigation() {
@@ -112,10 +116,39 @@ fun AppNavigation() {
 
             composable(
                 "room_detail/{roomId}",
-                arguments = listOf(navArgument("roomId") { type = androidx.navigation.NavType.IntType })
+                arguments = listOf(navArgument("roomId") {
+                    type = androidx.navigation.NavType.IntType
+                })
             ) { backStackEntry ->
                 val roomId = backStackEntry.arguments?.getInt("roomId") ?: -1
                 RoomDetailScreen(roomId = roomId)
+            }
+
+            composable("tenantProfile") {
+                TenantProfileScreen(navController = navController)
+            }
+            composable("editTenantProfile/{tenantId}") { backStackEntry ->
+                val tenantId = backStackEntry.arguments?.getString("tenantId") ?: ""
+
+                val viewModel: TenantProfileViewModel = viewModel(
+                    factory = TenantProfileViewModelFactory(UserRepository())
+                )
+
+                LaunchedEffect(tenantId) {
+                    viewModel.loadTenantProfile()
+                }
+
+                viewModel.tenant?.let { tenant ->
+                    EditTenantProfileScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        tenant = tenant
+                    )
+                } ?: run {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
         }
     }
