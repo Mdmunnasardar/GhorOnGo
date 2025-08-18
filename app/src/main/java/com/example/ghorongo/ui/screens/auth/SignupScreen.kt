@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -36,8 +35,6 @@ fun SignUpScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-    val context = LocalContext.current
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -140,6 +137,8 @@ fun SignUpScreen(
                     .padding(bottom = 16.dp),
                 singleLine = true
             )
+
+            // User Type Selection
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,8 +155,8 @@ fun SignUpScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
-                        selected = authViewModel.userType == "tenant",
-                        onClick = { authViewModel.userType = "tenant" },
+                        selected = authViewModel.userType.value == "tenant",
+                        onClick = { authViewModel.updateUserType("tenant") },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = Color.White,
                             unselectedColor = Color.White.copy(alpha = 0.6f)
@@ -172,8 +171,8 @@ fun SignUpScreen(
                     Spacer(modifier = Modifier.width(16.dp))
 
                     RadioButton(
-                        selected = authViewModel.userType == "landlord",
-                        onClick = { authViewModel.userType = "landlord" },
+                        selected = authViewModel.userType.value == "landlord",
+                        onClick = { authViewModel.updateUserType("landlord") },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = Color.White,
                             unselectedColor = Color.White.copy(alpha = 0.6f)
@@ -188,18 +187,27 @@ fun SignUpScreen(
             }
 
             // Sign Up Button
-            // SignUpScreen.kt
             Button(
                 onClick = {
+                    // Validate inputs before proceeding
                     when {
                         authViewModel.fullName.isBlank() -> {
                             authViewModel.errorMessage = "Please enter your name"
+                        }
+                        authViewModel.email.isBlank() -> {
+                            authViewModel.errorMessage = "Please enter your email"
+                        }
+                        authViewModel.password.isBlank() -> {
+                            authViewModel.errorMessage = "Please enter a password"
                         }
                         authViewModel.password.length < 6 -> {
                             authViewModel.errorMessage = "Password needs 6+ characters"
                         }
                         authViewModel.password != authViewModel.confirmPassword -> {
                             authViewModel.errorMessage = "Passwords don't match"
+                        }
+                        authViewModel.userType.value.isBlank() -> {
+                            authViewModel.errorMessage = "Please select user type"
                         }
                         else -> {
                             authViewModel.signUp(navController)

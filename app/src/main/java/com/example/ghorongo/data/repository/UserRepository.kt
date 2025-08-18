@@ -40,4 +40,13 @@ class UserRepository(
             Result.Failure(e)
         }
     }
+    suspend fun getLandlordProfile(userId: String): Result<Landlord> {
+        return try {
+            val snapshot = db.collection("landlords").document(userId).get().await()
+            val landlord = snapshot.toObject(Landlord::class.java) ?: throw Exception("Profile not found")
+            Result.Success(landlord)
+        } catch (e: Exception) {
+            Result.Failure(e)
+        }
+    }
 }

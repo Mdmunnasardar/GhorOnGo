@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.ghorongo.ui.navigation.BottomNavItem
@@ -16,7 +17,8 @@ import com.example.ghorongo.ui.navigation.BottomNavigationBar
 import com.example.ghorongo.ui.screens.booking.SavedScreen
 import com.example.ghorongo.ui.screens.chat.MessageScreen
 import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
-import com.example.ghorongo.ui.screens.profile.ProfileScreen
+import com.example.ghorongo.ui.screens.profile.LandlordProfileScreen
+import com.example.ghorongo.ui.screens.profile.TenantProfileScreen
 import com.example.ghorongo.viewmodel.AuthViewModel
 
 @Composable
@@ -32,6 +34,8 @@ fun MainScreen(
         BottomNavItem("Message", "message", Icons.AutoMirrored.Filled.Message)
     )
 
+    val userType by authViewModel.userType
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController, items = bottomNavItems) }
     ) { innerPadding ->
@@ -43,7 +47,12 @@ fun MainScreen(
                     .padding(innerPadding)
                     .fillMaxSize()
             )
-            "profile" -> ProfileScreen()
+            "profile" -> {
+                when (userType) {
+                    "landlord" -> LandlordProfileScreen(navController)
+                    else -> TenantProfileScreen(navController) // Default to tenant if unknown type
+                }
+            }
             "saved" -> SavedScreen()
             "message" -> MessageScreen()
         }
