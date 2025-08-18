@@ -3,6 +3,7 @@ package com.example.ghorongo.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -29,12 +30,18 @@ class AuthViewModel(
     var email by mutableStateOf("")
     var password by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
-    var userType by mutableStateOf("") // "landlord" or "tenant"
+
+    private val _userType = mutableStateOf("")
+    val userType: State<String> = _userType
 
     // UI state
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
     var successMessage by mutableStateOf<String?>(null)
+
+    fun updateUserType(type: String) {
+        _userType.value = type
+    }
 
     fun login(navController: NavController) = viewModelScope.launch {
         try {
@@ -51,14 +58,12 @@ class AuthViewModel(
 
             when (val result = userRepository.getUserType(userId)) {
                 is Result.Success -> {
-                    val destination =
-                        if (result.data == "landlord") "profile" else "dashboard"
-                    navController.navigate(destination) {
+                    updateUserType(result.data)
+                    navController.navigate("dashboard") {
                         popUpTo("login") { inclusive = true }
                         launchSingleTop = true
                     }
                 }
-
                 is Result.Failure -> {
                     errorMessage = "Failed to get user type: ${result.exception.message}"
                 }
@@ -81,7 +86,7 @@ class AuthViewModel(
                     return@launch
                 }
 
-                userType.isBlank() -> {
+                userType.value.isBlank() -> {
                     errorMessage = "Please select user type"
                     return@launch
                 }
@@ -105,7 +110,7 @@ class AuthViewModel(
             val userData = hashMapOf(
                 "fullName" to fullName,
                 "email" to email,
-                "userType" to userType,
+                "userType" to userType.value,
                 "createdAt" to System.currentTimeMillis()
             )
 
@@ -114,7 +119,7 @@ class AuthViewModel(
                 .await()
 
             // Create tenant or landlord profile
-            when (userType) {
+            when (userType.value) {
                 "tenant" -> {
                     val tenant = Tenant(
                         userId = userId,
@@ -135,8 +140,9 @@ class AuthViewModel(
             }
 
             successMessage = "Account created! Please verify your email."
-            navController.navigate("user_type_selection") {
+            navController.navigate("dashboard") {  // Changed from "user_type_selection" to "dashboard"
                 popUpTo("signup") { inclusive = true }
+                launchSingleTop = true
             }
         } catch (e: Exception) {
             errorMessage = "Signup failed: ${e.message}"
@@ -144,7 +150,6 @@ class AuthViewModel(
             isLoading = false
         }
     }
-
     fun sendPasswordReset(
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
@@ -165,6 +170,7 @@ class AuthViewModel(
             isLoading = false
         }
     }
+
     fun logout(navController: NavController) {
         auth.signOut()
         navController.navigate("login") {
@@ -187,7 +193,7 @@ class AuthViewModel(
     }
 }
 
-// ✅ Factory to create AuthViewModel with UserRepository
+// ✅ Factory
 class AuthViewModelFactory(
     private val userRepository: UserRepository
 ) : ViewModelProvider.Factory {

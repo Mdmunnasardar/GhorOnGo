@@ -39,5 +39,26 @@ data class Tenant(
     val hasPets: Boolean = false,
     val smokingHabit: Boolean = false,
     val drinkingHabit: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis()
+    val employer: String = "",
+    val rentalHistory: List<RentalHistory> = emptyList(),
+    val preferences: TenantPreferences = TenantPreferences(),
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
+
+)
+
+data class RentalHistory(
+    val propertyId: String = "",
+    val landlordId: String = "",
+    val startDate: String = "",
+    val endDate: String = "",
+    val rentAmount: Double = 0.0,
+    val status: String = "" // "active", "completed", "terminated"
+)
+
+data class TenantPreferences(
+    val preferredLocation: String = "",
+    val budgetRange: String = "",
+    val roomType: String = "",
+    val amenities: List<String> = emptyList()
 )

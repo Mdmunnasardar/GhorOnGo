@@ -1,7 +1,6 @@
 package com.example.ghorongo.data.model
 
 import java.util.Date
-
 data class Landlord(
     val userId: String = "",
     val fullName: String = "",

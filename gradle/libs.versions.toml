@@ -21,6 +21,7 @@ credentials = "1.2.2"
 credentialsPlayServicesAuth = "1.2.2"
 googleid = "1.1.1"
 material3 = "1.2.1"
+foundation = "1.9.0"
 
 [libraries]
 # Core Android
@@ -69,6 +70,7 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

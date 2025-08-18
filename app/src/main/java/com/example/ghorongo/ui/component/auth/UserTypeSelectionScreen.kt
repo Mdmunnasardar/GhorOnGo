@@ -34,7 +34,7 @@ fun UserTypeSelectionScreen(
         // Landlord Option
         OutlinedCard(
             onClick = {
-                viewModel.userType = "landlord"
+//                viewModel.userType = "landlord"
                 navController.navigate("profile") {
                     popUpTo("user_type_selection") { inclusive = true }
                 }
@@ -63,7 +63,7 @@ fun UserTypeSelectionScreen(
         // Tenant Option
         OutlinedCard(
             onClick = {
-                viewModel.userType = "tenant"
+//                viewModel.userType = "tenant"
                 navController.navigate("profile") {
                     popUpTo("user_type_selection") { inclusive = true }
                 }
