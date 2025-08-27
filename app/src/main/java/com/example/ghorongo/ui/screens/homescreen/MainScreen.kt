@@ -1,5 +1,6 @@
 package com.example.ghorongo.ui.screens.homescreen
 
+import SavedScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -14,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.ghorongo.ui.navigation.BottomNavItem
 import com.example.ghorongo.ui.navigation.BottomNavigationBar
-import com.example.ghorongo.ui.screens.booking.SavedScreen
 import com.example.ghorongo.ui.screens.chat.ChatScreenUI
 
 import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
