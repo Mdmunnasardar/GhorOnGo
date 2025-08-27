@@ -16,7 +16,6 @@ data class Message(
     val text: String,
     val isSender: Boolean
 )
-
 // Single message bubble
 @Composable
 fun MessageBubble(message: Message) {
@@ -39,7 +38,6 @@ fun MessageBubble(message: Message) {
         }
     }
 }
-
 // Messages list
 @Composable
 fun MessagesList(messages: List<Message>) {
@@ -91,9 +89,18 @@ fun MessageInput(onSend: (String) -> Unit) {
 fun ChatScreenUI() {
     val messages = remember {
         mutableStateListOf(
-            Message("Hello!", false),
-            Message("Hi, how are you?", true),
-            Message("I am fine, thanks!", false)
+            Message("Hi Shakib!", false),
+            Message("Hello! How is the apartment viewing?", true),
+            Message("Everything looks perfect, thanks for checking.", false),
+            Message("Great! Let me know if you want to book.", true),
+            Message("I really like the living room and the balcony view.", false),
+            Message("Yes, it's one of the best features of this apartment.", true),
+            Message("Is the monthly rent still 15,000 BDT?", false),
+            Message("Yes, the rent is fixed at 15,000 BDT per month.", true),
+            Message("Are there any additional maintenance charges?", false),
+            Message("No, the maintenance is included in the rent.", true),
+            Message("Perfect! I think I will confirm the booking by tomorrow.", false),
+            Message("Sounds good! I will prepare the documents for you.", true)
         )
     }
 
