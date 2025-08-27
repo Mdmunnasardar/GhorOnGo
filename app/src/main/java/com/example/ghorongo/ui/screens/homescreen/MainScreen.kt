@@ -15,11 +15,19 @@ import androidx.navigation.NavHostController
 import com.example.ghorongo.ui.navigation.BottomNavItem
 import com.example.ghorongo.ui.navigation.BottomNavigationBar
 import com.example.ghorongo.ui.screens.booking.SavedScreen
-import com.example.ghorongo.ui.screens.chat.MessageScreen
+import com.example.ghorongo.ui.screens.chat.ChatScreenUI
+
 import com.example.ghorongo.ui.screens.dashboard.DashboardScreen
 import com.example.ghorongo.ui.screens.profile.LandlordProfileScreen
 import com.example.ghorongo.ui.screens.profile.TenantProfileScreen
 import com.example.ghorongo.viewmodel.AuthViewModel
+
+//
+@Composable
+fun MessageScreen() {
+    ChatScreenUI() // crash-free chat UI
+}
+
 
 @Composable
 fun MainScreen(
