@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -24,21 +28,28 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.ghorongo.viewmodel.AuthViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
+    val focusManager = LocalFocusManager.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1976D2)) // Blue background
+            .background(Color(0xFF1976D2))
     ) {
         Column(
             modifier = Modifier
@@ -47,7 +58,7 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header
+
             Text(
                 text = "Create Account",
                 style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
@@ -60,204 +71,150 @@ fun SignUpScreen(
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
+            // Full Name
             // Full Name Field
             OutlinedTextField(
                 value = authViewModel.fullName,
-                onValueChange = { authViewModel.fullName = it },
+                onValueChange = { authViewModel.fullName = it.trimStart() },
                 label = { Text("Full Name", color = Color.White) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedTextColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
-                    focusedLabelColor = Color.White
-                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                singleLine = true
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next // NEXT action on keyboard
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) } // move focus to next field
+                )
             )
 
-            // Email Field
+            // Email
             OutlinedTextField(
                 value = authViewModel.email,
-                onValueChange = { authViewModel.email = it },
+                onValueChange = { authViewModel.email = it.trimStart() },
                 label = { Text("Email", color = Color.White) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedTextColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
-                    focusedLabelColor = Color.White
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                 singleLine = true
             )
 
-            // Password Field
+            // Password
             OutlinedTextField(
                 value = authViewModel.password,
-                onValueChange = { authViewModel.password = it },
+                onValueChange = { authViewModel.password = it.trimStart() },
                 label = { Text("Password", color = Color.White) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedTextColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
-                    focusedLabelColor = Color.White
-                ),
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                 singleLine = true
             )
 
-            // Confirm Password Field
+            // Confirm Password
             OutlinedTextField(
                 value = authViewModel.confirmPassword,
-                onValueChange = { authViewModel.confirmPassword = it },
+                onValueChange = { authViewModel.confirmPassword = it.trimStart() },
                 label = { Text("Confirm Password", color = Color.White) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedTextColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
-                    focusedLabelColor = Color.White
-                ),
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        if (authViewModel.fullName.isNotBlank() &&
+                            authViewModel.email.isNotBlank() &&
+                            authViewModel.password.isNotBlank() &&
+                            authViewModel.password == authViewModel.confirmPassword &&
+                            authViewModel.userType.value.isNotBlank()
+                        ) {
+                            authViewModel.signUp(navController)
+                        } else {
+                            authViewModel.errorMessage = "Please fill all fields correctly"
+                        }
+                    }
+                ),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 singleLine = true
             )
 
             // User Type Selection
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(
-                    text = "I am a:",
-                    color = Color.White,
-                    modifier = Modifier.padding(bottom = 8.dp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = authViewModel.userType.value == "tenant",
+                    onClick = { authViewModel.updateUserType("tenant") },
+                    colors = RadioButtonDefaults.colors(selectedColor = Color.White)
                 )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = authViewModel.userType.value == "tenant",
-                        onClick = { authViewModel.updateUserType("tenant") },
-                        colors = RadioButtonDefaults.colors(
-                            selectedColor = Color.White,
-                            unselectedColor = Color.White.copy(alpha = 0.6f)
-                        )
-                    )
-                    Text(
-                        text = "Tenant",
-                        color = Color.White,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    RadioButton(
-                        selected = authViewModel.userType.value == "landlord",
-                        onClick = { authViewModel.updateUserType("landlord") },
-                        colors = RadioButtonDefaults.colors(
-                            selectedColor = Color.White,
-                            unselectedColor = Color.White.copy(alpha = 0.6f)
-                        )
-                    )
-                    Text(
-                        text = "Landlord",
-                        color = Color.White,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
+                Text("Tenant", color = Color.White, modifier = Modifier.padding(start = 8.dp))
+                Spacer(modifier = Modifier.width(16.dp))
+                RadioButton(
+                    selected = authViewModel.userType.value == "landlord",
+                    onClick = { authViewModel.updateUserType("landlord") },
+                    colors = RadioButtonDefaults.colors(selectedColor = Color.White)
+                )
+                Text("Landlord", color = Color.White, modifier = Modifier.padding(start = 8.dp))
             }
 
-            // Sign Up Button
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Sign Up Button with active/inactive color
+            val isFormValid = authViewModel.fullName.isNotBlank() &&
+                    authViewModel.email.isNotBlank() &&
+                    authViewModel.password.isNotBlank() &&
+                    authViewModel.password == authViewModel.confirmPassword &&
+                    authViewModel.userType.value.isNotBlank()
+
             Button(
                 onClick = {
-                    // Validate inputs before proceeding
-                    when {
-                        authViewModel.fullName.isBlank() -> {
-                            authViewModel.errorMessage = "Please enter your name"
-                        }
-                        authViewModel.email.isBlank() -> {
-                            authViewModel.errorMessage = "Please enter your email"
-                        }
-                        authViewModel.password.isBlank() -> {
-                            authViewModel.errorMessage = "Please enter a password"
-                        }
-                        authViewModel.password.length < 6 -> {
-                            authViewModel.errorMessage = "Password needs 6+ characters"
-                        }
-                        authViewModel.password != authViewModel.confirmPassword -> {
-                            authViewModel.errorMessage = "Passwords don't match"
-                        }
-                        authViewModel.userType.value.isBlank() -> {
-                            authViewModel.errorMessage = "Please select user type"
-                        }
-                        else -> {
-                            authViewModel.signUp(navController)
-                        }
-                    }
+                    focusManager.clearFocus()
+                    authViewModel.signUp(navController)
                 },
+                enabled = isFormValid && !authViewModel.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                enabled = !authViewModel.isLoading
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isFormValid) Color(0xFF4B13AF) else Color.Gray
+                )
             ) {
                 if (authViewModel.isLoading) {
                     CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = Color.White,
                         strokeWidth = 2.dp,
                         modifier = Modifier.size(20.dp)
                     )
                 } else {
-                    Text("Sign Up")
+                    Text("Sign Up", color = Color.Black)
                 }
             }
 
-            // Login Prompt
-            TextButton(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Login prompt
+            TextButton(onClick = { navController.popBackStack() }) {
                 Text("Already have an account? ", color = Color.White)
-                Text(
-                    "Login",
-                    color = Color(0xFFFFD700) // Gold color for emphasis
-                )
+                Text("Login", color = Color(0xFF462285))
             }
 
-            // Error Message
-            authViewModel.errorMessage?.let { error ->
-                Text(
-                    text = error,
-                    color = Color(0xFFFF5252), // Light red
-                    modifier = Modifier.padding(top = 16.dp)
-                )
+            // Error & success messages
+            authViewModel.errorMessage?.let {
+                Text(it, color = Color(0xFFFF5252), modifier = Modifier.padding(top = 16.dp))
             }
-
-            // Success Message
-            authViewModel.successMessage?.let { message ->
-                Text(
-                    text = message,
-                    color = Color(0xFF69F0AE), // Light green
-                    modifier = Modifier.padding(top = 16.dp)
-                )
+            authViewModel.successMessage?.let {
+                Text(it, color = Color(0xFF69F0AE), modifier = Modifier.padding(top = 16.dp))
             }
         }
     }

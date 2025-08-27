@@ -43,17 +43,18 @@ class AuthViewModel(
         _userType.value = type
     }
 
-    fun login(navController: NavController) = viewModelScope.launch {
+    fun login(navController: NavController, emailTrimmed: String, passwordTrimmed: String) = viewModelScope.launch {
         try {
             isLoading = true
             errorMessage = null
 
-            if (email.isBlank() || password.isBlank()) {
+            if (emailTrimmed.isBlank() || passwordTrimmed.isBlank()) {
                 errorMessage = "Please fill in all fields"
                 return@launch
             }
 
-            auth.signInWithEmailAndPassword(email, password).await()
+            // ✅ Use trimmed email & password
+            auth.signInWithEmailAndPassword(emailTrimmed, passwordTrimmed).await()
             val userId = auth.currentUser?.uid ?: return@launch
 
             when (val result = userRepository.getUserType(userId)) {

@@ -37,7 +37,6 @@ fun ProfileScreen() {
     ) { uri: Uri? ->
         profileImageUri = uri
     }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -124,4 +123,5 @@ fun ProfileScreen() {
             }
         }
     }
+
 }
